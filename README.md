@@ -93,16 +93,20 @@ For real Android devices, backend traffic on port `3000` must be reversed over U
 From project root:
 
 ```sh
-npm run backend:install
-npm run backend:init
 npm run backend
 ```
 
 In another terminal:
 
 ```sh
+npm start
+```
+
+In another terminal:
+
+```sh
 npm run android:reverse
-npm run android
+npm run android -- --no-packager
 ```
 
 You can verify reverse rules with:
