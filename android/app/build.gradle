@@ -21,7 +21,9 @@ react {
     //   The list of variants to that are debuggable. For those we're going to
     //   skip the bundling of the JS bundle and the assets. By default is just 'debug'.
     //   If you add flavors like lite, prod, etc. you'll have to list your debuggableVariants.
-    // debuggableVariants = ["liteDebug", "prodDebug"]
+    // Bundle JS even for debug builds so the app can launch from Android Studio
+    // or a device without depending on a live Metro connection.
+    debuggableVariants = []
 
     /* Bundling */
     //   A list containing the node command and its flags. Default is just 'node'.
@@ -115,5 +117,24 @@ dependencies {
         implementation("com.facebook.react:hermes-android")
     } else {
         implementation jscFlavor
+    }
+
+    implementation project(':react-native-splash-screen')
+
+}
+
+afterEvaluate {
+    def reanimatedProject = project(":react-native-reanimated")
+    def workletsProject = project(":react-native-worklets")
+
+    tasks.matching { it.name.startsWith("configureCMake") || it.name.startsWith("buildCMake") }.configureEach {
+        if (it.name.contains("RelWithDebInfo")) {
+            dependsOn(reanimatedProject.tasks.named("prefabReleasePackage"))
+            dependsOn(workletsProject.tasks.named("prefabReleasePackage"))
+        }
+        if (it.name.contains("Debug")) {
+            dependsOn(reanimatedProject.tasks.named("prefabDebugPackage"))
+            dependsOn(workletsProject.tasks.named("prefabDebugPackage"))
+        }
     }
 }

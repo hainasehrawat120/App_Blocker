@@ -86,6 +86,51 @@ You've successfully run and modified your React Native App. :partying_face:
 
 If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
 
+## Backend + Login Setup (Android Device)
+
+For real Android devices, backend traffic on port `3000` must be reversed over USB (Metro already uses `8081`).
+
+From project root:
+
+```sh
+npm run backend:install
+npm run backend:init
+npm run backend
+```
+
+In another terminal:
+
+```sh
+npm run android:reverse
+npm run android
+```
+
+You can verify reverse rules with:
+
+```sh
+npm run android:reverse:list
+```
+
+Expected entry:
+
+```txt
+tcp:3000 tcp:3000
+```
+
+## MySQL Verification Queries (for demo/review)
+
+Run these in MySQL Workbench to show app data is saved:
+
+```sql
+USE appblocker;
+
+SELECT id, name, email FROM users ORDER BY id DESC;
+SELECT id, user_id, COALESCE(name, subject_name) AS subject_name, time, day, color, icon FROM subjects ORDER BY id DESC;
+SELECT id, user_id, COALESCE(name, topic_name) AS topic_name FROM topics ORDER BY id DESC;
+SELECT id, user_id, date, hours, note FROM sessions ORDER BY id DESC;
+SELECT id, user_id, text, done, date FROM goals ORDER BY id DESC;
+```
+
 # Learn More
 
 To learn more about React Native, take a look at the following resources:
